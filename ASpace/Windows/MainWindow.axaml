@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" 
+        SizeToContent="WidthAndHeight"
+        x:Class="ASpace.Windows.MainWindow"
+        CanResize="False"
+        Title="ASpace">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit" Click="Menu_Exit" />
+            </MenuItem>
+            <MenuItem Header="Display">
+                <MenuItem Header="Scale">
+                    <MenuItem Header="1x" Tag="1" Click="Menu_DisplayScale"/>
+                    <MenuItem Header="2x" Tag="2" Click="Menu_DisplayScale"/>
+                    <MenuItem Header="3x" Tag="3" Click="Menu_DisplayScale"/>
+                    <MenuItem Header="4x" Tag="4" Click="Menu_DisplayScale"/>
+                    <MenuItem Header="5x" Tag="5" Click="Menu_DisplayScale"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem>
+                
+            </MenuItem>
+        </Menu>
+        <StackPanel>
+            <Canvas x:Name="Display" Background="Black" />
+        </StackPanel>
+    </DockPanel>
+</Window>
