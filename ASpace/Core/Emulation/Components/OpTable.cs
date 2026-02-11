@@ -26,7 +26,7 @@ public static class OpTable
 
         // MVI {dest}, d8
         foreach (var op in new byte[] {
-            0x06, 0x16, 0x26,
+            0x06, 0x16, 0x26, 0x36,
             0x0E, 0x1E, 0x2E, 0x3E,
         }) 
         {
@@ -38,21 +38,39 @@ public static class OpTable
                 $"MVI {dest}, %d8",
                 (cpu) =>
                 {
+                    // For moving a byte into mem at address {HL}
+                    // MVI M, %d8
+                    if (dest == Registers.Name.M)
+                    {
+                        cpu.Bus.WriteByte(cpu.Reg.HL, cpu.FetchByte());
+                        return 10;
+                    }
+                    
+                    // For other ops.
                     cpu.Reg.SetByName(dest, cpu.FetchByte());
                     return 7;
                 }                
             );
         }
         
-        // MVI M, d8
-        _ops[0x36] = new CpuOp(
-            "MVI M, %d8",
-            (cpu) =>
-            {
-                cpu.Bus.WriteByte(cpu.Reg.HL, cpu.FetchByte());
-                return 10;
-            }
-        );
+        // MOV ops
+        foreach (var op in new byte[]
+        {
+            // 5-cycle Reg-to-Reg MOVs
+            0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4F,
+            0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x57, 0x58, 0x59, 0x5A, 0x5B, 0x5C, 0x5D, 0x5F,
+            0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6F,
+            0x78, 0x79, 0x7A, 0x7B, 0x7C, 0x7D, 0x7F,
+            
+            // 7-cycle Reg-to-Mem MOVs
+            0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x77,
+
+            // 7-cycle Mem-to-Reg MOVs
+            0x46, 0x56, 0x66, 0x4E, 0x5E, 0x6E, 0x7E, 
+        })
+        {
+            
+        }
         
         // Register-to-Register MOV ops, 5 cycles
         {
