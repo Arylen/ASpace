@@ -9,7 +9,7 @@ public static class OpTable
 {
     private static Dictionary<byte, CpuOp>? _ops = null;
     private static Logger _logger = new (nameof(OpTable));
-
+    
     private static void BuildOpTable()
     {
         _logger.Info("Building CPU Operation Table.");
@@ -23,16 +23,37 @@ public static class OpTable
         // NOPs
         foreach (var idx in (byte[])[0x00, 0x10, 0x20, 0x30, 0x08, 0x18, 0x28, 0x38])
             _ops[idx] = new CpuOp("NOP", (_) => 4);
-        
-        // MVI
-        _ops[0x06] = new CpuOp("MVI B, {d8}", (cpu) => { cpu.Reg.B = cpu.FetchByte(); return 7; });
-        _ops[0x16] = new CpuOp("MVI D, {d8}", (cpu) => { cpu.Reg.D = cpu.FetchByte(); return 7; });
-        _ops[0x26] = new CpuOp("MVI H, {d8}", (cpu) => { cpu.Reg.H = cpu.FetchByte(); return 7; });
-        _ops[0x0E] = new CpuOp("MVI C, {d8}", (cpu) => { cpu.Reg.C = cpu.FetchByte(); return 7; });
-        _ops[0x1E] = new CpuOp("MVI E, {d8}", (cpu) => { cpu.Reg.E = cpu.FetchByte(); return 7; });
-        _ops[0x2E] = new CpuOp("MVI L, {d8}", (cpu) => { cpu.Reg.L = cpu.FetchByte(); return 7; });
-        _ops[0x3E] = new CpuOp("MVI A, {d8}", (cpu) => { cpu.Reg.A = cpu.FetchByte(); return 7; });
 
+        // MVI {dest}, d8
+        foreach (var op in new byte[] {
+            0x06, 0x16, 0x26,
+            0x0E, 0x1E, 0x2E, 0x3E,
+        }) 
+        {
+            var registers = Registers.GetEncodedRegs(op);
+            var dest = registers.Destination;
+            if (registers.Source != Registers.Name.M)
+                throw new ArgumentException($"MVI op source register was NOT memory? {op:X2} - {registers.Source}");
+            _ops[op] = new CpuOp(
+                $"MVI {dest}, %d8",
+                (cpu) =>
+                {
+                    cpu.Reg.SetByName(dest, cpu.FetchByte());
+                    return 7;
+                }                
+            );
+        }
+        
+        // MVI M, d8
+        _ops[0x36] = new CpuOp(
+            "MVI M, %d8",
+            (cpu) =>
+            {
+                cpu.Bus.WriteByte(cpu.Reg.HL, cpu.FetchByte());
+                return 10;
+            }
+        );
+        
         // Register-to-Register MOV ops, 5 cycles
         {
             byte[] movOps = 
@@ -44,7 +65,7 @@ public static class OpTable
             ];
             foreach (var op in movOps)
             {
-                var opRegisters = Registers.GetEncodedDataTransferRegisters(op);
+                var opRegisters = Registers.GetEncodedRegs(op);
                 _ops[op] = new CpuOp(
                     $"MOV {opRegisters.Destination}, {opRegisters.Source}",
                     (cpu) =>
@@ -65,7 +86,7 @@ public static class OpTable
             ];
             foreach (var op in moveToMemOps)
             {
-                var registers = Registers.GetEncodedDataTransferRegisters(op);
+                var registers = Registers.GetEncodedRegs(op);
                 if (registers.Destination != Registers.Name.M)
                     throw new Exception($"Expected destination of MemoryAddress (HL/M) when making op table. Got {registers.Destination} for opcode {op:X2}");
                 _ops[op] = new CpuOp(
@@ -91,7 +112,7 @@ public static class OpTable
 
             foreach (var op in moveFromMemOps)
             {
-                var registers = Registers.GetEncodedDataTransferRegisters(op);
+                var registers = Registers.GetEncodedRegs(op);
                 if (registers.Source != Registers.Name.M)
                     throw new Exception($"Expected source of MemoryAddress (HL/M) when making op table. Got {registers.Source} for opcode {op:X2}");
                 _ops[op] = new CpuOp(

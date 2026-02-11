@@ -80,7 +80,7 @@ public class Registers
         };
     }
 
-    public static EncodedRegisters GetEncodedDataTransferRegisters(byte value)
+    public static EncodedRegisters GetEncodedRegs(byte value)
     {
         const byte destMask = 0b00111000;
         const byte sourceMask = 0b00000111;

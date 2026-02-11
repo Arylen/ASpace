@@ -275,7 +275,7 @@ public class RegistersTests
     public void GetEncodedDataTransferRegisters_MOV_B_C_DecodesCorrectly()
     {
         // MOV B, C = 0x41 = 01 000 001
-        var result = Registers.GetEncodedDataTransferRegisters(0x41);
+        var result = Registers.GetEncodedRegs(0x41);
         
         Assert.That(result.Destination, Is.EqualTo(Registers.Name.B));
         Assert.That(result.Source, Is.EqualTo(Registers.Name.C));
@@ -285,7 +285,7 @@ public class RegistersTests
     public void GetEncodedDataTransferRegisters_MOV_A_B_DecodesCorrectly()
     {
         // MOV A, B = 0x78 = 01 111 000
-        var result = Registers.GetEncodedDataTransferRegisters(0x78);
+        var result = Registers.GetEncodedRegs(0x78);
         
         Assert.That(result.Destination, Is.EqualTo(Registers.Name.A));
         Assert.That(result.Source, Is.EqualTo(Registers.Name.B));
@@ -295,7 +295,7 @@ public class RegistersTests
     public void GetEncodedDataTransferRegisters_MOV_H_L_DecodesCorrectly()
     {
         // MOV H, L = 0x65 = 01 100 101
-        var result = Registers.GetEncodedDataTransferRegisters(0x65);
+        var result = Registers.GetEncodedRegs(0x65);
         
         Assert.That(result.Destination, Is.EqualTo(Registers.Name.H));
         Assert.That(result.Source, Is.EqualTo(Registers.Name.L));
@@ -305,7 +305,7 @@ public class RegistersTests
     public void GetEncodedDataTransferRegisters_MOV_M_A_DecodesCorrectly()
     {
         // MOV M, A = 0x77 = 01 110 111
-        var result = Registers.GetEncodedDataTransferRegisters(0x77);
+        var result = Registers.GetEncodedRegs(0x77);
         
         Assert.That(result.Destination, Is.EqualTo(Registers.Name.M));
         Assert.That(result.Source, Is.EqualTo(Registers.Name.A));
@@ -315,7 +315,7 @@ public class RegistersTests
     public void GetEncodedDataTransferRegisters_MOV_A_M_DecodesCorrectly()
     {
         // MOV A, M = 0x7E = 01 111 110
-        var result = Registers.GetEncodedDataTransferRegisters(0x7E);
+        var result = Registers.GetEncodedRegs(0x7E);
         
         Assert.That(result.Destination, Is.EqualTo(Registers.Name.A));
         Assert.That(result.Source, Is.EqualTo(Registers.Name.M));
@@ -332,7 +332,7 @@ public class RegistersTests
     public void GetEncodedDataTransferRegisters_SameRegister_DecodesCorrectly(
         byte opcode, Registers.Name expectedDest, Registers.Name expectedSrc)
     {
-        var result = Registers.GetEncodedDataTransferRegisters(opcode);
+        var result = Registers.GetEncodedRegs(opcode);
         
         Assert.That(result.Destination, Is.EqualTo(expectedDest));
         Assert.That(result.Source, Is.EqualTo(expectedSrc));
