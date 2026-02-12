@@ -8,7 +8,7 @@ public class CpuOp(string dasmTemplate, Func<CPU, int> handler)
     private static Logger _logger = new(nameof(CpuOp));
     
     public string DasmTemplate { get; init; } = dasmTemplate;
-    public Func<CPU, int> Handler { get; init; }
+    public Func<CPU, int> Handler { get; init; } = handler;
 
     public string BuildMnemonic(CPU cpu, ushort address)
     {
