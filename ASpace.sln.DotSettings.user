@@ -9,5 +9,6 @@
     &lt;TestId&gt;NUnit3x::9986E5B2-7E7D-47A6-80E5-0C19E3130E9D::net10.0::ASpace.Test.Instructions.MVI_Tests.MVI_B_D8__06&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::9986E5B2-7E7D-47A6-80E5-0C19E3130E9D::net10.0::ASpace.Test.Instructions.MVI_Tests&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::9986E5B2-7E7D-47A6-80E5-0C19E3130E9D::net10.0::ASpace.Test.Instructions.NOP_Tests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::9986E5B2-7E7D-47A6-80E5-0C19E3130E9D::net10.0::ASpace.Test.Instructions.MOV_Tests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
